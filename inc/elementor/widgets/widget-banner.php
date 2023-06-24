@@ -206,17 +206,17 @@ class themeplace_Widget_Banner extends Widget_Base {
                           'echo' => 1,
                           'hide_empty' => 1,
                           'show_count' => 1,
-                          'selected' => get_query_var( 'download_cat' ),
-                          'name' => 'download_cat',
+                          'selected' => get_query_var( 'product_cat' ),
+                          'name' => 'product_cat',
                           'hierarchical'  => 1,
                           'value_field' => 'name',
                           'class' => 'themeplace-download-cat-filter',
-                          'taxonomy' => 'download_category'
+                          'taxonomy' => 'product_cat'
                         ) ); ?>
                       </div>
                       <div class="themeplace-search-fields">
                         <input name="s" value="<?php echo ( isset($_GET['s']) ) ? $_GET['s']: null; ?>" type="text" placeholder="<?php echo esc_attr( $settings['searchtext'] ); ?>">
-                        <input type="hidden" name="post_type" value="download">
+                        <input type="hidden" name="post_type" value="product">
                         <span class="themeplace-search-btn"><input type="submit"></span>
                       </div>
                     </form>
@@ -289,7 +289,7 @@ class themeplace_Widget_Banner extends Widget_Base {
               <?php
 
               $download = new \WP_Query( array( 
-                 'post_type' => 'download',
+                 'post_type' => 'product',
                  'posts_per_page' => 7
               ));
 
@@ -298,7 +298,7 @@ class themeplace_Widget_Banner extends Widget_Base {
 
                 <li>
                     <a href="<?php the_permalink(); ?>">
-                      <img src="<?php echo esc_url( get_post_meta( get_the_ID(), 'product_item_thumbnail', 1 ) ) ?>" alt="<?php the_title_attribute(); ?>">
+                      <img src="<?php echo esc_url( get_the_post_thumbnail_url() ) ?>" alt="<?php the_title_attribute(); ?>">
                     </a>
                 </li>
                <?php endwhile; wp_reset_postdata(); ?>
