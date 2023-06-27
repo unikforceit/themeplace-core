@@ -3,7 +3,7 @@
 * Plugin Name: ThemePlace Core
 * Plugin URI: https://github.com/farhan01617/themeplace-core
 * Description: After install the ThemePlace WordPress Theme, you must need to install this "ThemePlace Core" first to get all functions of ThemePlace WP Theme.
-* Version: 1.0.4
+* Version: 2.0
 * Author: CodeCorns
 * Author URI: http://themeforest.net/user/codecorns
 * Text Domain: themeplace
