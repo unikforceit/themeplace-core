@@ -65,7 +65,7 @@ class themeplace_Widget_Newest extends Widget_Base {
             <ul class="list-inline">
                <li class="select-cat list-inline-item" data-filter="*"><?php echo esc_html__( 'All Items', 'themeplace' ) ?></li>
                <?php $newest_menu_terms = get_terms( array(
-                   'taxonomy' => 'download_category',
+                   'taxonomy' => 'product_cat',
                    'hide_empty' => false,  
                ) ); 
                
@@ -78,21 +78,21 @@ class themeplace_Widget_Newest extends Widget_Base {
             <?php
 
             $download = new \WP_Query( array( 
-               'post_type' => 'download',
+               'post_type' => 'product',
                'posts_per_page' => $settings['ppp']['size']
             ));
-
             /* Start the Loop */
             while ( $download->have_posts() ) : $download->the_post(); 
 
-              $download_terms = get_the_terms( get_the_ID() , 'download_category' );
-              $thumbnail = get_post_meta( get_the_ID(), 'product_item_thumbnail', 1 ); ?>
-              
+              $download_terms = get_the_terms( get_the_ID() , 'product_cat' );
+              $thumbnail = get_the_post_thumbnail_url();
+              $product = wc_get_product(get_the_ID());
+                ?>
                <!-- Item -->
                <div class="dm-col-10 <?php foreach ( $download_terms as $download_term ) { echo esc_attr( $download_term->slug ).' '; } ?>">
 
                   <a class="sit-preview" href="<?php the_permalink(); ?>">
-                     <img src="<?php if ( $thumbnail ) { echo esc_url( $thumbnail ); } else { the_post_thumbnail_url( 'themeplace-80x80' ); } ?>" data-preview-url="<?php the_post_thumbnail_url(); ?>" data-item-cost="<?php if ( edd_get_download_price( get_the_ID() ) == 0 ){ echo esc_html__( 'Free', 'themeplace' ); } else { echo edd_currency_filter().edd_get_download_price(get_the_ID() ); } ?>" data-item-category="<?php foreach ( $download_terms as $download_term ) { echo esc_attr( $download_term->name ); } ?>" data-item-author="<?php the_author(); ?>" alt="<?php the_title_attribute(); if ( get_post_meta( get_the_ID(), 'subheading', true ) ) { echo " - "; echo get_post_meta( get_the_ID(), 'subheading', true ); } ?>" >
+                     <img src="<?php if ( $thumbnail ) { echo esc_url( $thumbnail ); } else { the_post_thumbnail_url( 'themeplace-80x80' ); } ?>" data-preview-url="<?php the_post_thumbnail_url(); ?>" data-item-cost="<?php if ( $product->get_regular_price() == 0 ){ echo esc_html__( 'Free', 'themeplace' ); } else { echo get_woocommerce_currency_symbol().$product->get_price(); } ?>" data-item-category="<?php foreach ( $download_terms as $download_term ) { echo esc_attr( $download_term->name ); } ?>" data-item-author="<?php the_author(); ?>" alt="<?php the_title_attribute(); if ( get_post_meta( get_the_ID(), 'subheading', true ) ) { echo " - "; echo get_post_meta( get_the_ID(), 'subheading', true ); } ?>" >
                   </a>
                </div>
 

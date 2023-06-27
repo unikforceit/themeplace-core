@@ -78,7 +78,7 @@ class themeplace_Widget_download extends Widget_Base {
             <ul class="list-inline">
                <li class="select-cat list-inline-item" data-filter="*"><?php echo esc_html__( 'All Items', 'themeplace' ) ?></li>
                <?php  $download_menu_terms = get_terms( array(
-                   'taxonomy' => 'download_category',
+                   'taxonomy' => 'product_cat',
                    'hide_empty' => false,  
                ) ); 
                
@@ -91,7 +91,7 @@ class themeplace_Widget_download extends Widget_Base {
             <?php
 
             $download = new \WP_Query( array( 
-               'post_type' => 'download',
+               'post_type' => 'product',
                'posts_per_page' => $settings['ppp']['size'],
                'order' => $settings['order'],
             ));
@@ -103,8 +103,9 @@ class themeplace_Widget_download extends Widget_Base {
 
             $themeplace_product_hover_button = !empty( $themeplace_opt['themeplace_product_hover_button'] ) ? $themeplace_opt['themeplace_product_hover_button'] : '';
 
-            $download_terms = get_the_terms( get_the_ID() , 'download_category' );
-            $download_tag = get_post_meta( get_the_ID(), 'download_tag', true )
+            $download_terms = get_the_terms( get_the_ID() , 'product_cat' );
+            $download_tag = get_post_meta( get_the_ID(), 'product_tag', true );
+            $product = wc_get_product(get_the_ID());
 
             ?>
                <!-- Item -->
@@ -132,16 +133,16 @@ class themeplace_Widget_download extends Widget_Base {
                         <p><?php echo get_post_meta( get_the_ID(), 'subheading', true ) ?></p>
 
                         <?php foreach ( $download_terms as $download_term ) { ?>
-                           <a href="<?php echo esc_attr( get_term_link( $download_term->slug, 'download_category' ) ); ?>" class="download-category"><?php echo esc_html( $download_term->name ); ?></a>
+                           <a href="<?php echo esc_attr( get_term_link( $download_term->slug, 'product_cat' ) ); ?>" class="download-category"><?php echo esc_html( $download_term->name ); ?></a>
                         <?php } ?>
 
                         <ul class="list-inline">
                            <li class="list-inline-item">
                               <b>
-                                 <?php if ( edd_get_download_price( get_the_ID() ) == 0 ){ ?>
+                                 <?php if ( $product->get_regular_price() == 0 ){ ?>
                                     <span><?php echo esc_html__( 'Free', 'themeplace' ) ?></span>
                                  <?php } else { ?>
-                                    <span><?php echo edd_currency_filter().edd_get_download_price(get_the_ID() ); ?></span>
+                                    <span><?php echo get_woocommerce_currency_symbol().$product->get_price(); ?></span>
                               <?php } ?>
                               </b>
                            </li>
@@ -156,11 +157,11 @@ class themeplace_Widget_download extends Widget_Base {
                            </li>
                            <?php if ( get_post_meta( get_the_ID(), 'type', true ) == 'theme' ): ?>
                            <li class="list-inline-item">
-                              <a href="<?php echo get_post_meta( get_the_ID(), 'preview_url', true ); ?>"><i class="fa fa-eye"></i><?php echo esc_html__( 'Demo' , 'themeplace' ) ?></a>
+                              <a href="<?php echo esc_url( $product->add_to_cart_url() ); ?>"><i class="fa fa-eye"></i><?php echo esc_html__( 'Demo' , 'themeplace' ) ?></a>
                            </li>
                            <?php endif ?>                           
                            <li class="list-inline-item">
-                              <a href="<?php echo esc_url( home_url( '/' ) ); ?>checkout?edd_action=add_to_cart&download_id=<?php echo get_the_ID(); ?>"><i class="fa fa-shopping-cart"></i><?php echo esc_html__( 'Download' , 'themeplace' ) ?></a>
+                              <a href="<?php echo esc_url( $product->add_to_cart_url() ); ?>"><i class="fa fa-shopping-cart"></i><?php echo esc_html__( 'Download' , 'themeplace' ) ?></a>
                            </li>
                         </ul>
                         <?php endif ?>
